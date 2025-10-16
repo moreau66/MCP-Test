@@ -1,0 +1,44 @@
+{
+  "metadata": {
+    "id": "bluetooth2mqtt",
+    "name": "Bluetooth2Mqtt",
+    "version": "1.0.0",
+    "description": "Pont Bluetooth vers MQTT pour NeurHomeIA",
+    "author": "moreau66",
+    "category": "microservice",
+    "tags": ["bluetooth", "mqtt", "iot"],
+    "icon": "Bluetooth"
+  },
+  "container": {
+    "image": "moreau66/bluetooth2mqtt",
+    "defaultVersion": "latest",
+    "autoStart": false,
+    "ports": [
+      { "container": 8080, "host": 8080 }
+    ],
+    "volumes": [
+      { "container": "/config", "host": "./bluetooth2mqtt/config" }
+    ],
+    "environment": [
+      {
+        "key": "MQTT_HOST",
+        "value": "mosquitto",
+        "required": true,
+        "description": "Adresse du broker MQTT"
+      }
+    ],
+    "restart": "unless-stopped"
+  },
+  "mcp": {
+    "service_id": "bluetooth2mqtt",
+    "topics": {
+      "discovery": "neurhomeia/bluetooth2mqtt/discovery",
+      "data": "neurhomeia/bluetooth2mqtt/data",
+      "commands": "neurhomeia/bluetooth2mqtt/commands"
+    }
+  },
+  "documentation": {
+    "readme_url": "https://raw.githubusercontent.com/moreau66/MCP-Bluetooth2Mqtt/main/README.md",
+    "github_url": "https://github.com/moreau66/MCP-Bluetooth2Mqtt"
+  }
+}
