@@ -1,0 +1,153 @@
+{
+  "resource_type": "page",
+  "resource_id": "astral2mqtt_management",
+  "name": "Astral2MQTT Management",
+  "version": "2.0.0",
+  "config": {
+    "service_id": "astral2mqtt",
+    "page_info": {
+      "title": "Astral2MQTT",
+      "description": "Configuration et gestion du service de données astronomiques",
+      "icon": "🌙",
+      "category": "astronomy",
+      "version": "2.0.0",
+      "navigation": {
+        "menuLabel": "Astral2MQTT",
+        "position": 1,
+        "parent": "microservices"
+      },
+      "sections": [
+        {
+          "id": "config",
+          "title": "Configuration des Localisations",
+          "description": "Ajouter ou modifier les localisations pour les calculs astronomiques",
+          "type": "form",
+          "order": 1,
+          "visible": true,
+          "fields": [
+            {
+              "key": "location_name",
+              "label": "Nom de la localisation",
+              "type": "text",
+              "required": true,
+              "placeholder": "ex: maison, bureau, jardin"
+            },
+            {
+              "key": "latitude",
+              "label": "Latitude",
+              "type": "number",
+              "required": true,
+              "validation": {
+                "min": -90,
+                "max": 90
+              },
+              "placeholder": "ex: 48.8566"
+            },
+            {
+              "key": "longitude",
+              "label": "Longitude",
+              "type": "number",
+              "required": true,
+              "validation": {
+                "min": -180,
+                "max": 180
+              },
+              "placeholder": "ex: 2.3522"
+            }
+          ]
+        },
+        {
+          "id": "status",
+          "title": "État du Service",
+          "description": "Informations sur le statut du service",
+          "type": "monitoring",
+          "order": 2,
+          "visible": true,
+          "metrics": [
+            {
+              "key": "service_status",
+              "label": "Statut",
+              "type": "text"
+            },
+            {
+              "key": "total_locations",
+              "label": "Nombre de localisations",
+              "type": "number"
+            },
+            {
+              "key": "last_update",
+              "label": "Dernière mise à jour",
+              "type": "datetime"
+            }
+          ]
+        },
+        {
+          "id": "locations_table",
+          "title": "Localisations Configurées",
+          "description": "Liste de toutes les localisations",
+          "type": "table",
+          "order": 3,
+          "visible": true,
+          "columns": [
+            {
+              "key": "name",
+              "label": "Nom",
+              "type": "text"
+            },
+            {
+              "key": "latitude",
+              "label": "Latitude",
+              "type": "number",
+              "precision": 4
+            },
+            {
+              "key": "longitude",
+              "label": "Longitude",
+              "type": "number",
+              "precision": 4
+            },
+            {
+              "key": "type",
+              "label": "Type",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    },
+    "actions": [
+      {
+        "id": "add_location",
+        "label": "Ajouter une localisation",
+        "icon": "plus",
+        "style": "primary",
+        "action": "call_tool",
+        "tool_name": "add_location"
+      },
+      {
+        "id": "refresh_data",
+        "label": "Actualiser les données",
+        "icon": "refresh",
+        "style": "secondary",
+        "action": "call_tool",
+        "tool_name": "refresh_all_data"
+      },
+      {
+        "id": "health_check",
+        "label": "Vérifier la santé",
+        "icon": "heart",
+        "style": "outline",
+        "action": "call_tool",
+        "tool_name": "health_check"
+      },
+      {
+        "id": "list_locations",
+        "label": "Lister les localisations",
+        "icon": "list",
+        "style": "outline",
+        "action": "call_tool",
+        "tool_name": "list_locations"
+      }
+    ]
+  }
+}

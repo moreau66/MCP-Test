@@ -1,0 +1,238 @@
+{
+  "resource_type": "widget",
+  "resource_id": "astral2mqtt_astronomy_widget",
+  "name": "Astral2MQTT Astronomy Widget",
+  "version": "2.0.0",
+  "config": {
+    "id": "astral2mqtt-astronomy-v2",
+    "name": "Données Astronomiques",
+    "version": "2.0.0",
+    "description": "Widget d'affichage des données astronomiques complètes avec position solaire/lunaire, événements quotidiens et trajectoires",
+    "author": "Astral2MQTT Service",
+    "deviceTypes": ["astronomy_station", "weather_station", "sensor"],
+    "display": {
+      "icon": "🌙",
+      "primaryColor": "hsl(240, 100%, 50%)",
+      "secondaryColor": "hsl(240, 50%, 80%)",
+      "background_gradient": "linear-gradient(135deg, hsl(240, 100%, 50%), hsl(260, 80%, 60%))",
+      "size": "large",
+      "refreshInterval": 300000
+    },
+    "sections": [
+      {
+        "id": "solar_position",
+        "title": "Position Solaire",
+        "description": "Position actuelle du soleil dans le ciel",
+        "fields": [
+          {
+            "key": "current_elevation",
+            "label": "Élévation",
+            "type": "number",
+            "unit": "°",
+            "precision": 1,
+            "icon": "Sun",
+            "visible": true,
+            "style": {
+              "size": "large",
+              "align": "center",
+              "color": "hsl(var(--primary))"
+            }
+          },
+          {
+            "key": "current_azimuth",
+            "label": "Azimut",
+            "type": "number",
+            "unit": "°",
+            "precision": 1,
+            "icon": "Compass",
+            "visible": true
+          }
+        ],
+        "layout": "grid",
+        "columns": 2,
+        "visible": true
+      },
+      {
+        "id": "daily_events",
+        "title": "Événements Quotidiens",
+        "description": "Heures importantes de la journée",
+        "fields": [
+          {
+            "key": "sunrise",
+            "label": "Lever du soleil",
+            "type": "text",
+            "icon": "Sunrise",
+            "visible": true
+          },
+          {
+            "key": "sunset",
+            "label": "Coucher du soleil",
+            "type": "text",
+            "icon": "Sunset",
+            "visible": true
+          },
+          {
+            "key": "solar_noon",
+            "label": "Midi solaire",
+            "type": "text",
+            "icon": "Sun",
+            "visible": true
+          }
+        ],
+        "layout": "list",
+        "visible": true
+      },
+      {
+        "id": "lunar_data",
+        "title": "Données Lunaires",
+        "description": "Position et phase de la lune",
+        "fields": [
+          {
+            "key": "moon_phase",
+            "label": "Phase lunaire",
+            "type": "number",
+            "precision": 2,
+            "icon": "Moon",
+            "min": 0,
+            "max": 1,
+            "visible": true
+          },
+          {
+            "key": "current_moon_elevation",
+            "label": "Élévation lunaire",
+            "type": "number",
+            "unit": "°",
+            "precision": 1,
+            "icon": "Moon",
+            "visible": true
+          }
+        ],
+        "layout": "grid",
+        "columns": 2,
+        "visible": true
+      },
+      {
+        "id": "special_periods",
+        "title": "Périodes Spéciales",
+        "description": "Heures dorées, bleues et crépuscules",
+        "fields": [
+          {
+            "key": "golden_hour_start",
+            "label": "Heure dorée (début)",
+            "type": "text",
+            "icon": "Sparkles",
+            "visible": true
+          },
+          {
+            "key": "blue_hour_start",
+            "label": "Heure bleue (début)",
+            "type": "text",
+            "icon": "Zap",
+            "visible": true
+          }
+        ],
+        "layout": "list",
+        "collapsible": true,
+        "visible": true
+      }
+    ],
+    "interactions": [
+      {
+        "type": "refresh",
+        "label": "Actualiser",
+        "icon": "RefreshCw",
+        "style": "primary",
+        "tooltip": "Actualiser les données astronomiques"
+      },
+      {
+        "type": "command",
+        "label": "Recalculer",
+        "icon": "Calculator",
+        "action": "call_tool",
+        "tool_name": "refresh_all_data",
+        "confirmation": "Recalculer toutes les données astronomiques ?",
+        "style": "secondary",
+        "tooltip": "Force le recalcul de toutes les données"
+      },
+      {
+        "type": "navigate",
+        "label": "Configuration",
+        "icon": "Settings",
+        "action": "navigate_to_page",
+        "target": "astral2mqtt_management",
+        "style": "outline",
+        "tooltip": "Ouvrir la page de configuration"
+      }
+    ],
+    "dataMapping": {
+      "current_elevation": {
+        "tool_name": "get_astronomical_data",
+        "path": "current_elevation",
+        "fallback": 0,
+        "transform": "Math.round(value * 10) / 10"
+      },
+      "current_azimuth": {
+        "tool_name": "get_astronomical_data",
+        "path": "current_azimuth",
+        "fallback": 0,
+        "transform": "Math.round(value * 10) / 10"
+      },
+      "sunrise": {
+        "tool_name": "get_astronomical_data",
+        "path": "sunrise",
+        "fallback": "N/A",
+        "transform": "new Date(value).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})"
+      },
+      "sunset": {
+        "tool_name": "get_astronomical_data",
+        "path": "sunset",
+        "fallback": "N/A",
+        "transform": "new Date(value).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})"
+      },
+      "solar_noon": {
+        "tool_name": "get_astronomical_data",
+        "path": "solar_noon",
+        "fallback": "N/A",
+        "transform": "new Date(value).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'})"
+      },
+      "moon_phase": {
+        "tool_name": "get_astronomical_data",
+        "path": "moon_phase",
+        "fallback": 0,
+        "transform": "Math.round(value * 100) / 100"
+      },
+      "current_moon_elevation": {
+        "tool_name": "get_astronomical_data",
+        "path": "current_moon_elevation",
+        "fallback": 0,
+        "transform": "value !== null ? Math.round(value * 10) / 10 : 'N/A'"
+      },
+      "golden_hour_start": {
+        "tool_name": "get_astronomical_data",
+        "path": "golden_hour_start",
+        "fallback": "N/A",
+        "transform": "value ? new Date(value).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'}) : 'N/A'"
+      },
+      "blue_hour_start": {
+        "tool_name": "get_astronomical_data",
+        "path": "blue_hour_start",
+        "fallback": "N/A",
+        "transform": "value ? new Date(value).toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'}) : 'N/A'"
+      }
+    },
+    "metadata": {
+      "category": "astronomy",
+      "tags": ["soleil", "lune", "astronomie", "position"],
+      "compatibility": {
+        "min_neurhomia_version": "2.0.0",
+        "supported_themes": ["light", "dark", "auto"]
+      },
+      "performance": {
+        "estimated_load_time": "< 100ms",
+        "memory_usage": "low"
+      }
+    },
+    "createdAt": "2025-01-12T10:30:00Z",
+    "updatedAt": "2025-01-12T10:30:00Z"
+  }
+}
