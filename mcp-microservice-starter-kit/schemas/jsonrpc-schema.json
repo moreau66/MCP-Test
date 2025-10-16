@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "JSON-RPC 2.0 over MQTT Schema",
+  "description": "Schema for JSON-RPC 2.0 messages communicated over MQTT within the MCP architecture",
+  "oneOf": [
+    {"$ref": "#/$defs/JSONRPCRequest"},
+    {"$ref": "#/$defs/JSONRPCResponse"},
+    {"$ref": "#/$defs/JSONRPCNotification"},
+    {"$ref": "#/$defs/JSONRPCError"}
+  ],
+  "$defs": {
+    "JSONRPCRequest": {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "type": "string",
+          "enum": ["2.0"]
+        },
+        "method": {
+          "type": "string",
+          "description": "Name of the method to be invoked"
+        },
+        "params": {
+          "oneOf": [
+            {"type": "object"},
+            {"type": "array"}
+          ],
+          "description": "Parameters for the method"
+        },
+        "id": {
+          "oneOf": [
+            {"type": "string"},
+            {"type": "number"},
+            {"type": "null"}
+          ],
+          "description": "Unique identifier for the request"
+        },
+        "mcp_metadata": {
+          "$ref": "#/$defs/MCPMetadata"
+        }
+      },
+      "required": ["jsonrpc", "method", "id"],
+      "additionalProperties": false
+    },
+    "JSONRPCResponse": {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "type": "string",
+          "enum": ["2.0"]
+        },
+        "result": {
+          "description": "Result of the method invocation"
+        },
+        "error": {
+          "$ref": "#/$defs/JSONRPCErrorObject"
+        },
+        "id": {
+          "oneOf": [
+            {"type": "string"},
+            {"type": "number"},
+            {"type": "null"}
+          ],
+          "description": "Identifier matching the request"
+        },
+        "mcp_metadata": {
+          "$ref": "#/$defs/MCPMetadata"
+        }
+      },
+      "required": ["jsonrpc", "id"],
+      "oneOf": [
+        {
+          "required": ["result"],
+          "not": {"required": ["error"]}
+        },
+        {
+          "required": ["error"],
+          "not": {"required": ["result"]}
+        }
+      ],
+      "additionalProperties": false
+    },
+    "JSONRPCNotification": {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "type": "string",
+          "enum": ["2.0"]
+        },
+        "method": {
+          "type": "string",
+          "description": "Name of the method to be invoked"
+        },
+        "params": {
+          "oneOf": [
+            {"type": "object"},
+            {"type": "array"}
+          ],
+          "description": "Parameters for the method"
+        },
+        "mcp_metadata": {
+          "$ref": "#/$defs/MCPMetadata"
+        }
+      },
+      "required": ["jsonrpc", "method"],
+      "not": {"required": ["id"]},
+      "additionalProperties": false
+    },
+    "JSONRPCError": {
+      "type": "object",
+      "properties": {
+        "jsonrpc": {
+          "type": "string",
+          "enum": ["2.0"]
+        },
+        "error": {
+          "$ref": "#/$defs/JSONRPCErrorObject"
+        },
+        "id": {
+          "oneOf": [
+            {"type": "string"},
+            {"type": "number"},
+            {"type": "null"}
+          ]
+        },
+        "mcp_metadata": {
+          "$ref": "#/$defs/MCPMetadata"
+        }
+      },
+      "required": ["jsonrpc", "error", "id"],
+      "additionalProperties": false
+    },
+    "JSONRPCErrorObject": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "description": "Error code indicating the error type"
+        },
+        "message": {
+          "type": "string",
+          "description": "Short description of the error"
+        },
+        "data": {
+          "description": "Additional information about the error"
+        }
+      },
+      "required": ["code", "message"],
+      "additionalProperties": false
+    },
+    "MCPMetadata": {
+      "type": "object",
+      "properties": {
+        "service_id": {
+          "type": "string",
+          "description": "Identifier of the microservice"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the message"
+        },
+        "request_id": {
+          "type": "string",
+          "description": "Unique request identifier for tracing"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "normal", "high", "critical"],
+          "default": "normal",
+          "description": "Message priority level"
+        },
+        "correlation_id": {
+          "type": "string",
+          "description": "Correlation ID for related messages"
+        },
+        "user_id": {
+          "type": "string",
+          "description": "User ID for authentication and authorization"
+        },
+        "session_id": {
+          "type": "string",
+          "description": "Session ID for stateful interactions"
+        },
+        "timeout": {
+          "type": "integer",
+          "minimum": 100,
+          "description": "Request timeout in milliseconds"
+        },
+        "retry_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of retry attempts"
+        },
+        "trace_id": {
+          "type": "string",
+          "description": "Distributed tracing identifier"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

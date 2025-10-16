@@ -1,0 +1,41 @@
+# Dépendances de base pour microservices MCP
+mcp-mqtt-sdk>=1.0.0
+paho-mqtt>=1.6.0
+pydantic>=2.0.0
+python-json-logger>=2.0.0
+
+# Gestion des configurations
+python-dotenv>=1.0.0
+
+# Monitoring et métriques
+psutil>=5.9.0
+prometheus-client>=0.17.0
+
+# Sérialisation et validation
+jsonschema>=4.0.0
+pydantic[email]>=2.0.0
+
+# Utilitaires
+click>=8.0.0
+colorama>=0.4.6
+rich>=13.0.0
+
+# Développement et tests (optionnel)
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.0.0
+black>=23.0.0
+isort>=5.12.0
+flake8>=6.0.0
+mypy>=1.5.0
+
+# Sécurité
+cryptography>=41.0.0
+bcrypt>=4.0.0
+
+# Docker (si nécessaire)
+docker>=6.0.0
+
+# Base de données (si nécessaire)
+sqlalchemy>=2.0.0
+alembic>=1.11.0
