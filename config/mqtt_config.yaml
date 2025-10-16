@@ -1,0 +1,37 @@
+# Configuration MQTT pour Astral2Mqtt
+# Ce fichier peut être surchargé par les variables d'environnement
+
+mqtt:
+  broker: "mosquitto"
+  port: 1883
+  topic: "astral/data"
+  username: null
+  password: null
+  client_id: "astral2mqtt"
+  keepalive: 60
+  qos: 0
+  retain: false
+
+astral:
+  interval: 3600  # Intervalle de mise à jour en secondes
+  heartbeat_interval: 300  # Intervalle du heartbeat en secondes (5 minutes)
+  locations:
+    default:
+      latitude: 48.8566
+      longitude: 2.3522
+    paris:
+      latitude: 48.8566
+      longitude: 2.3522
+    toulouse:
+      latitude: 43.6047
+      longitude: 1.4442
+    montreal:
+      latitude: 45.5019
+      longitude: -73.5674
+
+discovery:
+  enabled: true
+  device_name: "Astral MQTT Bridge"
+  manufacturer: "Microservices Suite"
+  model: "Astral2Mqtt"
+  sw_version: "1.0.0"
