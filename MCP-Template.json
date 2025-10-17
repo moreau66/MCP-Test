@@ -1,0 +1,147 @@
+{
+  "metadata": {
+    "id": "astral2mqtt",
+    "name": "Astral2MQTT",
+    "version": "1.0.0",
+    "description": "Service astronomique publiant les données solaires et lunaires via MQTT",
+    "author": "moreau66",
+    "category": "microservice",
+    "tags": ["mqtt", "astronomy", "sun", "moon", "astral"],
+    "icon": "Sun"
+  },
+  "container": {
+    "image": "moreau66/astral2mqtt",
+    "defaultVersion": "latest",
+    "autoStart": false,
+    "ports": [],
+    "volumes": [
+      {
+        "container": "/app/config",
+        "host": "./astral2mqtt/config",
+        "mode": "rw"
+      },
+      {
+        "container": "/app/logs",
+        "host": "./astral2mqtt/logs",
+        "mode": "rw"
+      }
+    ],
+    "environment": [
+      {
+        "key": "MQTT_BROKER",
+        "value": "mosquitto",
+        "required": true,
+        "description": "Adresse du broker MQTT"
+      },
+      {
+        "key": "MQTT_PORT",
+        "value": "1883",
+        "required": true,
+        "description": "Port du broker MQTT"
+      },
+      {
+        "key": "MQTT_TOPIC",
+        "value": "astral/data",
+        "required": true,
+        "description": "Topic de base pour les publications"
+      },
+      {
+        "key": "MQTT_USER",
+        "value": "",
+        "required": false,
+        "description": "Utilisateur MQTT (optionnel)"
+      },
+      {
+        "key": "MQTT_PASS",
+        "value": "",
+        "required": false,
+        "secret": true,
+        "description": "Mot de passe MQTT (optionnel)"
+      },
+      {
+        "key": "MQTT_CLIENT_ID",
+        "value": "astral2mqtt",
+        "required": true,
+        "description": "Identifiant client MQTT"
+      },
+      {
+        "key": "ASTRAL_INTERVAL",
+        "value": "3600",
+        "required": true,
+        "description": "Intervalle de mise à jour en secondes"
+      },
+      {
+        "key": "LATITUDE",
+        "value": "48.8566",
+        "required": true,
+        "description": "Latitude de la localisation"
+      },
+      {
+        "key": "LONGITUDE",
+        "value": "2.3522",
+        "required": true,
+        "description": "Longitude de la localisation"
+      },
+      {
+        "key": "TIMEZONE",
+        "value": "Europe/Paris",
+        "required": true,
+        "description": "Fuseau horaire"
+      },
+      {
+        "key": "DISCOVERY_ENABLED",
+        "value": "true",
+        "required": false,
+        "description": "Activer la découverte automatique"
+      },
+      {
+        "key": "DISCOVERY_DEVICE_NAME",
+        "value": "Astral MQTT Bridge",
+        "required": false,
+        "description": "Nom de l'appareil pour la découverte"
+      },
+      {
+        "key": "DISCOVERY_MANUFACTURER",
+        "value": "Microservices Suite",
+        "required": false,
+        "description": "Fabricant pour la découverte"
+      }
+    ],
+    "restart": "unless-stopped",
+    "labels": {
+      "discovery.type": "astronomy",
+      "discovery.topics": "astral/+/data"
+    }
+  },
+  "mcp": {
+    "service_id": "astral2mqtt",
+    "topics": {
+      "discovery": "mcp/services/astral2mqtt/discovery",
+      "data": "astral/+/data",
+      "commands": "astral/commands/#"
+    },
+    "schemas": {
+      "mcp": "https://github.com/moreau66/MCP-Astral2Mqtt/blob/main/docs/mcp-schema.json",
+      "tools": "https://github.com/moreau66/MCP-Astral2Mqtt/blob/main/docs/mcp-tools-schema.json",
+      "resources": "https://github.com/moreau66/MCP-Astral2Mqtt/blob/main/docs/mcp-resources-schema.json"
+    }
+  },
+  "ui_component": {
+    "component_path": "Astral2MqttContainer",
+    "mode": "embedded"
+  },
+  "docker_compose": {
+    "depends_on": ["mosquitto"],
+    "networks": ["smart-home-network"],
+    "profiles": ["astral", "optional"]
+  },
+  "dependencies": {
+    "required": ["mosquitto"],
+    "optional": []
+  },
+  "documentation": {
+    "readme_url": "https://github.com/moreau66/MCP-Astral2Mqtt/blob/main/README.md",
+    "github_url": "https://github.com/moreau66/MCP-Astral2Mqtt",
+    "docker_hub_url": "https://hub.docker.com/r/moreau66/astral2mqtt"
+  }
+}
